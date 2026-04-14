@@ -157,7 +157,20 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
                         }
                     }
                     else {
-                        strongSelf.startNavigation(routeResponse: response, options: strongSelf._options!, navOptions: navigationOptions)
+                        guard let routes = response.routes, !routes.isEmpty else {
+                            strongSelf.sendEvent(eventType: MapBoxEventType.route_build_failed, data: "No routes found")
+                            flutterResult("No routes found in response")
+                            return
+                        }
+
+                        let route = routes[0]
+
+                        // basic sanity checks
+                        guard route.shape != nil else {
+                            strongSelf.sendEvent(eventType: MapBoxEventType.route_build_failed, data: "Route has no shape")
+                            flutterResult("Invalid route geometry")
+                            return
+                        }
                     }
                 }
             }
@@ -168,6 +181,10 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
     func startNavigation(routeResponse: RouteResponse, options: NavigationRouteOptions, navOptions: NavigationOptions)
     {
         isEmbeddedNavigation = false
+        guard let routes = routeResponse.routes, !routes.isEmpty else {
+            print("❌ Navigation aborted: routes missing")
+            returnµ
+        }
         if(self._navigationViewController == nil)
         {
             self._navigationViewController = NavigationViewController(for: routeResponse, routeIndex: 0, routeOptions: options, navigationOptions: navOptions)
