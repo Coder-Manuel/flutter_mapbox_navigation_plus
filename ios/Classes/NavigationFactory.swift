@@ -135,7 +135,7 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
                         print("➡️ Route \(index):")
                         print("   distance: \(route.distance)")
                         print("   expectedTravelTime: \(route.expectedTravelTime)")
-                        print("   hasShape: \(route.shape != nil)")
+                        print("   shape: \(route.shape)")
                         print("   legs: \(route.legs?.count ?? 0)")
                     }
                 } else {
