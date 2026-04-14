@@ -121,9 +121,26 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
             guard let strongSelf = self else { return }
             switch result {
             case .failure(let error):
+                print("❌ Mapbox Directions FAILED")
+                print("➡️ Error: \(error.localizedDescription)")
+                print("➡️ Full error: \(error)")
                 strongSelf.sendEvent(eventType: MapBoxEventType.route_build_failed)
                 flutterResult("An error occured while calculating the route \(error.localizedDescription)")
             case .success(let response):
+                print("✅ Mapbox Directions SUCCESS")
+                print("➡️ Routes count: \(response.routes?.count ?? 0)")
+
+                if let routes = response.routes {
+                    for (index, route) in routes.enumerated() {
+                        print("➡️ Route \(index):")
+                        print("   distance: \(route.distance)")
+                        print("   expectedTravelTime: \(route.expectedTravelTime)")
+                        print("   hasShape: \(route.shape != nil)")
+                        print("   legs: \(route.legs?.count ?? 0)")
+                    }
+                } else {
+                    print("❌ routes is NIL")
+                }
                 guard let routes = response.routes else { return }
                 //TODO: if more than one route found, give user option to select one: DOES NOT WORK
                 if(routes.count > 1 && strongSelf.ALLOW_ROUTE_SELECTION)
