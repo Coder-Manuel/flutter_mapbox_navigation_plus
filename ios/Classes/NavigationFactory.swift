@@ -200,7 +200,7 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
         isEmbeddedNavigation = false
         guard let routes = routeResponse.routes, !routes.isEmpty else {
             print("❌ Navigation aborted: routes missing")
-            returnµ
+            return
         }
         if(self._navigationViewController == nil)
         {
