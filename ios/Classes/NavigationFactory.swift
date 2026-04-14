@@ -202,17 +202,33 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
             print("❌ Navigation aborted: routes missing")
             return
         }
-        if(self._navigationViewController == nil)
-        {
-            self._navigationViewController = NavigationViewController(for: routeResponse, routeIndex: 0, routeOptions: options, navigationOptions: navOptions)
-            self._navigationViewController!.modalPresentationStyle = .fullScreen
-            self._navigationViewController!.delegate = self
-            self._navigationViewController!.navigationMapView!.localizeLabels()
-            self._navigationViewController!.showsReportFeedback = _showReportFeedbackButton
-            self._navigationViewController!.showsEndOfRouteFeedback = _showEndOfRouteFeedback
+
+        self._navigationViewController = NavigationViewController(
+            for: routeResponse,
+            routeIndex: 0,
+            routeOptions: options,
+            navigationOptions: navOptions
+        )
+
+        guard let navVC = self._navigationViewController else {
+            print("❌ Navigation VC nil")
+            return
         }
-        let flutterViewController = UIApplication.shared.delegate?.window??.rootViewController as! FlutterViewController
-        flutterViewController.present(self._navigationViewController!, animated: true, completion: nil)
+
+        navVC.modalPresentationStyle = .fullScreen
+        navVC.delegate = self
+        navVC.navigationMapView?.localizeLabels()
+        navVC.showsReportFeedback = self._showReportFeedbackButton
+        navVC.showsEndOfRouteFeedback = self._showEndOfRouteFeedback
+        
+        let rootVC = UIApplication.shared.delegate?.window??.rootViewController
+        guard let topVC = self.topViewController(rootVC) else {
+            print("❌ No top VC found")
+            return
+        }
+        topVC.present(navVC, animated: true, completion: nil) {
+            print("✅ Navigation UI presented")
+        }
     }
     
     func setNavigationOptions(wayPoints: [Waypoint]) {
