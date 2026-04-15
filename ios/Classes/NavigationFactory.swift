@@ -188,6 +188,11 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
                             flutterResult("Invalid route geometry")
                             return
                         }
+                        strongSelf.startNavigation(
+                            routeResponse: response,
+                            options: strongSelf._options!,
+                            navOptions: navigationOptions
+                        )
                     }
                 }
             }
