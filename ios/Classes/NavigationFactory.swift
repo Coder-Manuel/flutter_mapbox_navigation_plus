@@ -202,7 +202,7 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
             print("❌ Navigation aborted: routes missing")
             return
         }
-
+        print("✅ ReInit Nav Ctrl")
         self._navigationViewController = NavigationViewController(
             for: routeResponse,
             routeIndex: 0,
@@ -215,14 +215,18 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
             return
         }
 
+        print("✅ Updating NavCtrl Options")
         navVC.modalPresentationStyle = .fullScreen
         navVC.delegate = self
         navVC.navigationMapView?.localizeLabels()
         navVC.showsReportFeedback = self._showReportFeedbackButton
         navVC.showsEndOfRouteFeedback = self._showEndOfRouteFeedback
         
+        print("✅ Getting Root VC")
         let rootVC = UIApplication.shared.delegate?.window??.rootViewController
-        rootVC.present(navVC, animated: true, completion: nil) {
+
+        print("✅ Presenting VC")
+        rootVC.present(navVC, animated: true) {
             print("✅ Navigation UI presented")
         }
     }
