@@ -193,6 +193,7 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
                             options: strongSelf._options!,
                             navOptions: navigationOptions
                         )
+                        flutterResult("true")
                     }
                 }
             }
