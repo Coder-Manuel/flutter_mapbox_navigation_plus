@@ -223,7 +223,10 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
         navVC.showsEndOfRouteFeedback = self._showEndOfRouteFeedback
         
         print("✅ Getting Root VC")
-        let rootVC = UIApplication.shared.delegate?.window??.rootViewController
+        guard let rootVC = UIApplication.shared.delegate?.window??.rootViewController else {
+            print("❌ Root VC not found")
+            return
+        }
 
         print("✅ Presenting VC")
         rootVC.present(navVC, animated: true) {
