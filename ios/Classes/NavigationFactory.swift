@@ -222,11 +222,7 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
         navVC.showsEndOfRouteFeedback = self._showEndOfRouteFeedback
         
         let rootVC = UIApplication.shared.delegate?.window??.rootViewController
-        guard let topVC = self.topViewController(rootVC) else {
-            print("❌ No top VC found")
-            return
-        }
-        topVC.present(navVC, animated: true, completion: nil) {
+        rootVC.present(navVC, animated: true, completion: nil) {
             print("✅ Navigation UI presented")
         }
     }
