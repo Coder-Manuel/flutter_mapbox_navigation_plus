@@ -228,7 +228,7 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
         navVC.showsEndOfRouteFeedback = self._showEndOfRouteFeedback
         
         print("✅ Getting Root VC")
-        guard let rootVC = UIApplication.shared.delegate?.window??.rootViewController else {
+        guard let rootVC = getRootViewController() else {
             print("❌ Root VC not found")
             return
         }
@@ -236,6 +236,17 @@ public class NavigationFactory : NSObject, FlutterStreamHandler
         print("✅ Presenting VC")
         rootVC.present(navVC, animated: true) {
             print("✅ Navigation UI presented")
+        }
+    }
+
+    func getRootViewController() -> UIViewController? {
+        if #available(iOS 13.0, *) {
+            let scenes = UIApplication.shared.connectedScenes
+            let windowScene = scenes.first as? UIWindowScene
+            let window = windowScene?.windows.first
+            return window?.rootViewController
+        } else {
+            return UIApplication.shared.keyWindow?.rootViewController
         }
     }
     
