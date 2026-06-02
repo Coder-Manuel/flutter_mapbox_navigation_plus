@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart'; // PlatformException
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mapbox_navigation_plus/src/models/models.dart';
 
@@ -123,14 +123,17 @@ class MapBoxNavigationViewController {
 
   ///Ends Navigation and Closes the Navigation View
   Future<bool?> finishNavigation() async {
-    log('[MapboxNavigationViewController] finishNavigation: invoking platform method');
+    log('[MapboxNavigationViewController] finishNavigation: invoking on channel="${_methodChannel.name}"');
     try {
       final success =
           await _methodChannel.invokeMethod('finishNavigation', null);
-      log('[MapboxNavigationViewController] finishNavigation: platform returned success=$success');
+      log('[MapboxNavigationViewController] finishNavigation: completed — success=$success');
       return success as bool?;
+    } on PlatformException catch (e, stack) {
+      log('[MapboxNavigationViewController] finishNavigation: PlatformException code=${e.code} message=${e.message}\n$stack');
+      rethrow;
     } catch (e, stack) {
-      log('[MapboxNavigationViewController] finishNavigation: platform call failed — $e\n$stack');
+      log('[MapboxNavigationViewController] finishNavigation: unexpected error — $e\n$stack');
       rethrow;
     }
   }

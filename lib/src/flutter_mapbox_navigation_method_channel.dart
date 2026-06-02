@@ -93,14 +93,17 @@ class MethodChannelFlutterMapboxNavigation
 
   @override
   Future<bool?> finishNavigation() async {
-    log('[MapboxNavigation] finishNavigation: invoking platform method');
+    log('[MapboxNavigation] finishNavigation: invoking on channel="${methodChannel.name}"');
     try {
       final success =
           await methodChannel.invokeMethod<bool?>('finishNavigation');
-      log('[MapboxNavigation] finishNavigation: platform returned success=$success');
+      log('[MapboxNavigation] finishNavigation: completed — success=$success');
       return success;
+    } on PlatformException catch (e, stack) {
+      log('[MapboxNavigation] finishNavigation: PlatformException code=${e.code} message=${e.message}\n$stack');
+      rethrow;
     } catch (e, stack) {
-      log('[MapboxNavigation] finishNavigation: platform call failed — $e\n$stack');
+      log('[MapboxNavigation] finishNavigation: unexpected error — $e\n$stack');
       rethrow;
     }
   }

@@ -102,10 +102,20 @@ class FlutterMapboxNavigationPlugin : FlutterPlugin, MethodCallHandler,
                 addWayPointsToNavigation(call, result)
             }
             "finishNavigation" -> {
-                Log.d("FlutterMapboxNavigationPlugin", "finishNavigation called — stopping NavigationActivity")
-                NavigationLauncher.stopNavigation(currentActivity)
-                Log.d("FlutterMapboxNavigationPlugin", "finishNavigation: NavigationLauncher.stopNavigation complete")
-                result.success(true)
+                Log.d("FlutterMapboxNavigationPlugin", "finishNavigation called — currentActivity=$currentActivity")
+                try {
+                    if (currentActivity != null) {
+                        NavigationLauncher.stopNavigation(currentActivity)
+                        Log.d("FlutterMapboxNavigationPlugin", "finishNavigation: stopNavigation broadcast sent")
+                    } else {
+                        Log.w("FlutterMapboxNavigationPlugin", "finishNavigation: currentActivity is null — skipping stopNavigation")
+                    }
+                    result.success(true)
+                    Log.d("FlutterMapboxNavigationPlugin", "finishNavigation: result.success(true) sent")
+                } catch (e: Exception) {
+                    Log.e("FlutterMapboxNavigationPlugin", "finishNavigation error: ${e.message}", e)
+                    result.error("FINISH_NAVIGATION_ERROR", e.message, null)
+                }
             }
             "enableOfflineRouting" -> {
                 downloadRegionForOfflineRouting(call, result)
