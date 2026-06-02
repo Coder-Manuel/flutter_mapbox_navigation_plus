@@ -128,6 +128,7 @@ class NavigationActivity : AppCompatActivity() {
 
         finishBroadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
+                android.util.Log.d("NavigationActivity", "finishBroadcastReceiver: received ${intent.action} — calling finish()")
                 finish()
             }
         }

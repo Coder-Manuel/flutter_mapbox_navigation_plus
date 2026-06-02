@@ -28,6 +28,9 @@ public class NavigationLauncher {
     public static void stopNavigation(Activity activity) {
         Intent stopIntent = new Intent();
         stopIntent.setAction(KEY_STOP_NAVIGATION);
+        // setPackage makes the intent explicit so RECEIVER_NOT_EXPORTED receivers
+        // receive it correctly on Android 14+ within the same app.
+        stopIntent.setPackage(activity.getPackageName());
         activity.sendBroadcast(stopIntent);
     }
 }
