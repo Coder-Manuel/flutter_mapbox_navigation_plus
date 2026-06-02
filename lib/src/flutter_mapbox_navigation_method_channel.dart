@@ -93,8 +93,16 @@ class MethodChannelFlutterMapboxNavigation
 
   @override
   Future<bool?> finishNavigation() async {
-    final success = await methodChannel.invokeMethod<bool?>('finishNavigation');
-    return success;
+    log('[MapboxNavigation] finishNavigation: invoking platform method');
+    try {
+      final success =
+          await methodChannel.invokeMethod<bool?>('finishNavigation');
+      log('[MapboxNavigation] finishNavigation: platform returned success=$success');
+      return success;
+    } catch (e, stack) {
+      log('[MapboxNavigation] finishNavigation: platform call failed — $e\n$stack');
+      rethrow;
+    }
   }
 
   /// Will download the navigation engine and the user's region

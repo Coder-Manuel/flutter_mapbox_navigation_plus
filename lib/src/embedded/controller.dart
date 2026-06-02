@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -122,8 +123,16 @@ class MapBoxNavigationViewController {
 
   ///Ends Navigation and Closes the Navigation View
   Future<bool?> finishNavigation() async {
-    final success = await _methodChannel.invokeMethod('finishNavigation', null);
-    return success as bool?;
+    log('[MapboxNavigationViewController] finishNavigation: invoking platform method');
+    try {
+      final success =
+          await _methodChannel.invokeMethod('finishNavigation', null);
+      log('[MapboxNavigationViewController] finishNavigation: platform returned success=$success');
+      return success as bool?;
+    } catch (e, stack) {
+      log('[MapboxNavigationViewController] finishNavigation: platform call failed — $e\n$stack');
+      rethrow;
+    }
   }
 
   /// Generic Handler for Messages sent from the Platform

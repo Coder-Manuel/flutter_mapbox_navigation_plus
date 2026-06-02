@@ -3,6 +3,7 @@ package com.eopeter.fluttermapboxnavigation
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import android.content.pm.PackageManager
 import android.os.Build
 import com.eopeter.fluttermapboxnavigation.activity.NavigationLauncher
@@ -101,7 +102,10 @@ class FlutterMapboxNavigationPlugin : FlutterPlugin, MethodCallHandler,
                 addWayPointsToNavigation(call, result)
             }
             "finishNavigation" -> {
+                Log.d("FlutterMapboxNavigationPlugin", "finishNavigation called — stopping NavigationActivity")
                 NavigationLauncher.stopNavigation(currentActivity)
+                Log.d("FlutterMapboxNavigationPlugin", "finishNavigation: NavigationLauncher.stopNavigation complete")
+                result.success(true)
             }
             "enableOfflineRouting" -> {
                 downloadRegionForOfflineRouting(call, result)
