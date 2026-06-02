@@ -3,6 +3,7 @@ package com.eopeter.fluttermapboxnavigation.models.views
 import android.app.Activity
 import android.content.Context
 import android.view.View
+import com.eopeter.fluttermapboxnavigation.FlutterMapboxNavigationPlugin
 import com.eopeter.fluttermapboxnavigation.TurnByTurn
 import com.eopeter.fluttermapboxnavigation.databinding.NavigationActivityBinding
 import com.eopeter.fluttermapboxnavigation.models.MapBoxEvents
@@ -38,6 +39,7 @@ class EmbeddedNavigationMapView(
     }
 
     open fun initialize() {
+        FlutterMapboxNavigationPlugin.activeEmbeddedView = this
         initFlutterChannelHandlers()
         initNavigation()
 
@@ -57,6 +59,7 @@ class EmbeddedNavigationMapView(
     }
 
     override fun dispose() {
+        FlutterMapboxNavigationPlugin.activeEmbeddedView = null
         if((this.arguments?.get("enableOnMapTapCallback") as Boolean)) {
             this.binding.navigationView.unregisterMapObserver(onMapClick)
         }

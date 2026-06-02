@@ -218,7 +218,7 @@ open class TurnByTurn(
         PluginUtilities.sendEvent(MapBoxEvents.NAVIGATION_RUNNING)
     }
 
-    private fun finishNavigation(isOffRouted: Boolean = false) {
+    internal open fun finishNavigation(isOffRouted: Boolean = false) {
         Log.d("TurnByTurn", "finishNavigation called — isOffRouted=$isOffRouted, currentRoutes=${this.currentRoutes?.size ?: 0}")
         MapboxNavigationApp.current()!!.stopTripSession()
         Log.d("TurnByTurn", "finishNavigation: tripSession stopped, transitioning NavigationView to freeDrive")

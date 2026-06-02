@@ -77,6 +77,9 @@ class FlutterMapboxNavigationPlugin : FlutterPlugin, MethodCallHandler,
         var binaryMessenger: BinaryMessenger? = null
 
         var viewId = "FlutterMapboxNavigationView"
+
+        /** Holds a reference to the active embedded navigation view, if any. */
+        var activeEmbeddedView: TurnByTurn? = null
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
@@ -102,13 +105,18 @@ class FlutterMapboxNavigationPlugin : FlutterPlugin, MethodCallHandler,
                 addWayPointsToNavigation(call, result)
             }
             "finishNavigation" -> {
-                Log.d("FlutterMapboxNavigationPlugin", "finishNavigation called — currentActivity=$currentActivity")
+                Log.d("FlutterMapboxNavigationPlugin", "finishNavigation called — currentActivity=$currentActivity, activeEmbeddedView=$activeEmbeddedView")
                 try {
-                    if (currentActivity != null) {
+                    val embeddedView = activeEmbeddedView
+                    if (embeddedView != null) {
+                        Log.d("FlutterMapboxNavigationPlugin", "finishNavigation: delegating to embedded NavigationView")
+                        embeddedView.finishNavigation()
+                    } else if (currentActivity != null) {
+                        Log.d("FlutterMapboxNavigationPlugin", "finishNavigation: no embedded view — sending stopNavigation broadcast to NavigationActivity")
                         NavigationLauncher.stopNavigation(currentActivity)
                         Log.d("FlutterMapboxNavigationPlugin", "finishNavigation: stopNavigation broadcast sent")
                     } else {
-                        Log.w("FlutterMapboxNavigationPlugin", "finishNavigation: currentActivity is null — skipping stopNavigation")
+                        Log.w("FlutterMapboxNavigationPlugin", "finishNavigation: no embedded view and currentActivity is null — nothing to stop")
                     }
                     result.success(true)
                     Log.d("FlutterMapboxNavigationPlugin", "finishNavigation: result.success(true) sent")
